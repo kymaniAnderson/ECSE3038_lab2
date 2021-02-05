@@ -86,13 +86,13 @@ def update(tankID):
                 if request.json["percentage_full"] is not None: tankDB[index]["percentage_full"] = (request.json["percentage_full"])
         
         return jsonify(tankDB) 
-        
+
      elif request.method == "DELETE":
         # /DELETE
         for index in tankDB:
-            if tankDB[index]["id"] == tankID:
-                del tankDB[index]
-        
+            if index["id"] == tankID:
+                tankDB.remove(index)
+
         return jsonify(tankDB)
 
      else:
