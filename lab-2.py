@@ -39,11 +39,13 @@ def profile():
     elif request.method == "PATCH":
         # /PATCH
         profileDB["data"]["last_updated"] = (dte.strftime("%c"))
-       
-        if request.json["username"] is not None: profileDB["data"]["username"] = (request.json["username"])
-        if request.json["role"] is not None: profileDB["data"]["role"] = (request.json["role"])
-        if request.json["color"] is not None: profileDB["data"]["color"] = (request.json["color"])
-
+        
+        tempDict = request.json
+        attributes = tempDict.keys()
+        
+        for attribute in attributes:
+            profileDB["data"][attribute] = tempDict[attribute]
+  
         return jsonify(profileDB)
 
     else:
@@ -79,11 +81,12 @@ def update(tankID):
      if request.method == "PATCH":
         # /PATCH
         for index in tankDB:
-            if tankDB[index]["id"] == tankID:
-                if request.json["location"] is not None: tankDB[index]["location"] = (request.json["location"])
-                if request.json["lat"] is not None: tankDB[index]["lat"] = (request.json["lat"])
-                if request.json["long"] is not None: tankDB[index]["long"] = (request.json["long"])
-                if request.json["percentage_full"] is not None: tankDB[index]["percentage_full"] = (request.json["percentage_full"])
+            if index["id"] == tankID:
+                    tempDict = request.json
+                    attributes = tempDict.keys()
+        
+                    for attribute in attributes:
+                        index[attribute] = tempDict[attribute]
         
         return jsonify(tankDB) 
 
