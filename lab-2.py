@@ -5,6 +5,7 @@ app = Flask(__name__)
 dte = datetime.datetime.now()
 
 # fake DBs:
+dummyNum = 0
 
 profileDB = {
     "sucess": True,
@@ -16,22 +17,14 @@ profileDB = {
     }
 }
 
-tankDB =[
-    {
-	    "id": 1,
-        "location": "Engineering department",
-        "lat": 18.0051862,
-        "long": -76.7505108,
-        "percentage_full": 92
-    },
-]
+tankDB = []
 
 # Index
 @app.route("/", methods=["GET"])
 def home():
     return "hello lab 2"
 
-# Profile Routes:
+# PROFILE Routes:
 @app.route("/profile", methods=["GET", "POST", "PATCH"])
 def profile():
     if request.method == "POST":
@@ -57,20 +50,54 @@ def profile():
         # /GET
         return jsonify(profileDB)
 
-# Data Routes:
+# DATA Routes:
 @app.route("/data", methods=["GET", "POST"])
 def data():
     if request.method == "POST":
-        pass
+        # /POST
+        global dummyNum
+        dummyNum += 1   
+        
+        posts = {}
+       
+        posts["id"] = dummyNum
+        posts["location"] = (request.json["location"])
+        posts["lat"] = (request.json["lat"])
+        posts["long"] = (request.json["long"])
+        posts["percentage_full"] = (request.json["percentage_full"])
+
+        tankDB.append(posts)
+
+        return jsonify(tankDB)
+
     else:
-        pass
+        # /GET
+        return jsonify(tankDB)
 
 @app.route("/data/<int:tankID>", methods=["PATCH", "DELETE"])
 def update(tankID):
      if request.method == "PATCH":
-        pass
-     else: 
-        pass
+        # /PATCH
+        for index in tankDB:
+            if tankDB[index]["id"] == tankID:
+                if request.json["location"] is not None: tankDB[index]["location"] = (request.json["location"])
+                if request.json["lat"] is not None: tankDB[index]["lat"] = (request.json["lat"])
+                if request.json["long"] is not None: tankDB[index]["long"] = (request.json["long"])
+                if request.json["percentage_full"] is not None: tankDB[index]["percentage_full"] = (request.json["percentage_full"])
+        
+        return jsonify(tankDB) 
+        
+     elif request.method == "DELETE":
+        # /DELETE
+        for index in tankDB:
+            if tankDB[index]["id"] == tankID:
+                del tankDB[index]
+        
+        return jsonify(tankDB)
+
+     else:
+         # /GET
+        return jsonify(tankDB)
 
 # Main
 if __name__ == '__main__':
