@@ -24,26 +24,26 @@ tankDB ={
 # Index
 @app.route("/", methods=["GET"])
 def home():
-    pass
+    return "hello lab 2"
 
 # Profile Routes:
 @app.route("/profile", methods=["GET", "POST", "PATCH"])
 def profile():
     if request.method == "POST":
         # /POST
-        profileDB["last_updated"].append(dte.strftime("%c"))
-        profileDB["username"].append(request.json["username"])
-        profileDB["role"].append(request.json["role"])
-        profileDB["color"].append(request.json["color"])
+        profileDB["last_updated"] = (dte.strftime("%c"))
+        profileDB["username"] = (request.json["username"])
+        profileDB["role"] = (request.json["role"])
+        profileDB["color"] = (request.json["color"])
        
         return jsonify(profileDB)
    
     elif request.method == "PATCH":
         # /PATCH
         profileDB["last_updated"].append(dte.strftime("%c"))
-        print("") if request.json["username"] is None else profileDB["username"].append(request.json["username"])
-        print("") if request.json["role"] is None else profileDB["role"].append(request.json["role"])
-        print("") if request.json["color"] is None else profileDB["color"].append(request.json["color"])
+        if request.json["username"] is not None: profileDB["username"] = (request.json["username"])
+        if request.json["role"] is not None: profileDB["role"] = (request.json["role"])
+        if request.json["color"] is not None: profileDB["color"] = (request.json["color"])
 
         return jsonify(profileDB)
 
